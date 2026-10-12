@@ -50,7 +50,7 @@
 }
 
 .logo {
-    height: 60px;
+    height:90px;
     width: auto;
     margin-bottom: 20px;
 }
@@ -131,7 +131,7 @@
     background-color: #1a73e8;
     color: #ffffff;
     border: none;
-    border-radius: 999px;
+    border-radius: 6px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;

@@ -1,0 +1,62 @@
+<div class="modal-backdrop" (click)="annuler()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <!-- En-tête -->
+    <div class="modal-header">
+      <h2>Nouvelle demande de permission</h2>
+      <button type="button" class="btn-close" (click)="annuler()" aria-label="Fermer">×</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="soumettre()" class="modal-body">
+    <div class="form-row">
+        <label for="date_debut">Date de la permission</label>
+        <input
+          id="date_debut"
+          type="date"
+          formControlName="date_debut" 
+          [min]="today"/>
+         @if (form.get('date_debut')?.touched) {
+    @if (form.get('date_debut')?.hasError('required')) {
+      <span class="field-error">La date est obligatoire.</span>
+    } @else if (form.get('date_debut')?.hasError('datePassee')) {
+      <span class="field-error">La date ne peut pas être dans le passé.</span>
+    }
+  }
+      </div>
+    <!-- Lieu de jouissance -->
+      <div class="form-row">
+        <label for="lieu">Lieu de jouissance</label>
+        <input
+          id="lieu"
+          type="text"
+          formControlName="lieu"
+          placeholder="Madagascar" />
+      </div>
+      <!-- Motif -->
+      <div class="form-row">
+        <label for="motif">Motif</label>
+        <textarea
+          id="motif"
+          rows="3"
+          formControlName="motif"
+          placeholder="Décrivez brièvement la raison..."></textarea>
+        @if (form.get('motif')?.invalid && form.get('motif')?.touched) {
+          <span class="field-error">Le motif est obligatoire.</span>
+        }
+      </div>
+       @if (errorMessage()) {
+        <div class="global-error">{{ errorMessage() }}</div>
+      } 
+      <!-- peut etre on a pas besoin du message d'erreur -->
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="annuler()">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          {{ isLoading() ? 'Envoi en cours...' : 'Soumettre la demande' }}
+        </button>
+      </div>
+    </form>
+    </div>
+</div>

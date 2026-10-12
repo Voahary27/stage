@@ -1,0 +1,127 @@
+<div class="modal-backdrop" (click)="fermerModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>Détail de la demande</h2>
+      <button type="button" class="btn-close" (click)="fermerModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Bloc : Demande -->
+      <section class="detail-section">
+        <h3>📋 Demande</h3>
+
+        <div class="detail-row">
+          <span class="label">Demandé le</span>
+          <span class="valeur">{{ formatDateTime(demande.demande_date_creation) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Demandeur</span>
+          <span class="valeur">
+            {{ demande.utilisateur_nom }} {{ demande.utilisateur_prenom }}
+            <small>({{ demande.utilisateur_matricule }})</small>
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Type</span>
+          <span class="valeur">
+            <span class="badge-type" [class]="'type-' + demande.demande_type">
+              {{ demande.demande_type }}
+            </span>
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Dates prévues</span>
+          <span class="valeur">
+            {{ formatDate(demande.demande_date_debut) }}
+            @if (demande.demande_date_fin) {
+              → {{ formatDate(demande.demande_date_fin) }}
+            }
+          </span>
+        </div>
+
+        @if (demande.demande_type === 'conge') {
+          <div class="detail-row">
+            <span class="label">Nombre de jours</span>
+            <span class="valeur"><strong>{{ demande.nb_jours }} jour(s)</strong></span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Titre(s) impacté(s)</span>
+            <span class="valeur">{{ formatVentilation() }}</span>
+          </div>
+        }
+
+        <div class="detail-row">
+          <span class="label">Motif</span>
+          <span class="valeur">{{ demande.demande_motif || '—' }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Lieu de jouissance</span>
+          <span class="valeur">{{ demande.demande_lieu_jouissance || '—' }}</span>
+        </div>
+      </section>
+
+      <!-- Bloc : Décision (si traitée) -->
+      @if (demande.demande_status !== 'en_attente') {
+        <section class="detail-section decision"
+                 [class.decision-acceptee]="demande.demande_status === 'acceptee'"
+                 [class.decision-refusee]="demande.demande_status === 'refusee'">
+
+          <h3>
+            @if (demande.demande_status === 'acceptee') {
+              ✅ Décision — Acceptée
+            } @else {
+              ❌ Décision — Refusée
+            }
+          </h3>
+
+          <div class="detail-row">
+            <span class="label">Statut</span>
+            <span class="valeur">
+              <span class="badge-statut" [class]="'statut-' + demande.demande_status">
+                {{ demande.demande_status }}
+              </span>
+            </span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Décidé par</span>
+            <span class="valeur">
+              @if (demande.admin_nom) {
+                {{ demande.admin_nom }} {{ demande.admin_prenom }}
+              } @else {
+                —
+              }
+            </span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Le</span>
+            <span class="valeur">{{ formatDateTime(demande.demande_date_decision) }}</span>
+          </div>
+
+          @if (demande.demande_status === 'refusee' && demande.demande_motif_refus) {
+            <div class="detail-row">
+              <span class="label">Motif du refus</span>
+              <span class="valeur motif-refus">{{ demande.demande_motif_refus }}</span>
+            </div>
+          }
+        </section>
+      }
+
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="fermerModal()">
+        Fermer
+      </button>
+    </div>
+
+  </div>
+</div>

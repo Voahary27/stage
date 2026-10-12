@@ -1,0 +1,37 @@
+<div class="modal-backdrop" (click)="fermer()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>Motif du refus</h2>
+      <button type="button" class="btn-close" (click)="fermer()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="hint">
+        Veuillez indiquer la raison du refus. Cette information sera visible
+        par l'utilisateur concerné.
+      </p>
+
+      <textarea
+        rows="4"
+        placeholder="Ex : Effectif insuffisant, période trop chargée..."
+        [value]="motif()"
+        (input)="motif.set($any($event.target).value)"
+        autofocus></textarea>
+
+      @if (errorMessage()) {
+        <div class="field-error">{{ errorMessage() }}</div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="fermer()">
+        Annuler
+      </button>
+      <button type="button" class="btn-danger" (click)="valider()">
+        Confirmer le refus
+      </button>
+    </div>
+
+  </div>
+</div>

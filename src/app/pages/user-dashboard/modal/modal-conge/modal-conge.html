@@ -1,0 +1,136 @@
+<div class="modal-backdrop" (click)="annuler()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <!-- En-tête -->
+    <div class="modal-header">
+      <h2>Nouvelle demande de congé</h2>
+      <button type="button" class="btn-close" (click)="annuler()" aria-label="Fermer">×</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="soumettre()" class="modal-body">
+
+      <!-- Date début -->
+      <div class="form-row">
+        <label for="date_debut">Date de début</label>
+        <input id="date_debut" type="date" formControlName="date_debut" 
+        [min]="today"/>
+        @if (form.get('date_debut')?.touched) {
+    @if (form.get('date_debut')?.hasError('required')) {
+      <span class="field-error">La date de début est obligatoire.</span>
+    } @else if (form.get('date_debut')?.hasError('datePassee')) {
+      <span class="field-error">La date ne peut pas être dans le passé.</span>
+    }
+  }
+      </div>
+
+      <!-- Date fin -->
+      <div class="form-row">
+        <label for="date_fin">Date de fin</label>
+        <input id="date_fin" type="date" formControlName="date_fin" 
+        [min]="form.value.date_debut || today"/>
+       @if (form.get('date_fin')?.touched) {
+    @if (form.get('date_fin')?.hasError('required')) {
+      <span class="field-error">La date de fin est obligatoire.</span>
+    } @else if (form.get('date_fin')?.hasError('dateInvalide')) {
+      <span class="field-error">La date de fin doit être après la date de début.</span>
+    }
+  }
+      </div>
+
+      <!-- Lieu -->
+      <div class="form-row">
+        <label for="lieu">Lieu de jouissance</label>
+        <input id="lieu" type="text" formControlName="lieu" placeholder="Madagascar" />
+      </div>
+
+      <!-- Motif -->
+      <div class="form-row">
+        <label for="motif">Motif</label>
+        <textarea id="motif" rows="3" formControlName="motif"
+                  placeholder="Décrivez brièvement la raison..."></textarea>
+        @if (form.get('motif')?.invalid && form.get('motif')?.touched) {
+          <span class="field-error">Le motif est obligatoire.</span>
+        }
+      </div>
+
+    <!--Résumé  -->
+      @if (nbJours() > 0) {
+        <div class="resume" [class.resume-erreur]="soldeInsuffisant()">
+
+          <h3> Résumé de la demande</h3>
+
+          <div class="resume-ligne">
+            <span class="label">Jours total demandés :</span>
+            <span class="valeur">{{ nbJours() }} jour(s)</span>
+          </div>
+
+          <!-- Ventilation OK -->
+          @if (ventilation(); as v) {
+            <div class="ventilation">
+              <p class="ventilation-titre">Impact sur le solde :</p>
+              <ul>
+                @for (item of v; track item.annee) {
+                  <li>
+                    <strong>{{ item.jours }} jour(s)</strong>
+                    au titre de l'année <strong>{{ item.annee }}</strong>
+                  </li>
+                }
+              </ul>
+              <div class="resume-ligne total">
+                <span class="label">Solde total disponible :</span>
+                <span class="valeur">{{ totalDispo() }} jour(s)</span>
+              </div>
+              <div class="resume-ligne">
+                <span class="label">Reste après validation :</span>
+                <span class="valeur">{{ totalDispo() - nbJours() }} jour(s)</span>
+              </div>
+            </div>
+          } @else {
+            <!-- Ventilation impossible : solde insuffisant -->
+            <div class="erreur-solde">
+               <strong>Solde insuffisant</strong><br />
+              Vous demandez <strong>{{ nbJours() }} jour(s)</strong>
+              mais il ne vous reste que
+              <strong>{{ totalDispo() }} jour(s)</strong> disponibles.
+            </div>
+          }
+
+          <p class="note-validation">
+             Cet aperçu est <strong>indicatif</strong>. Votre solde ne sera
+            débité qu'après validation par un administrateur.
+          </p>
+        </div>
+      }
+
+      <!-- Erreur globale -->
+      @if (errorMessage()) {
+        <div class="global-error">{{ errorMessage() }}</div>
+      }
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="annuler()">
+          Annuler
+        </button>
+
+        <div style="background: #ffe; padding: 12px; margin: 12px 0; font-size: 12px; font-family: monospace; border: 1px solid #ccc;">
+  <b>form.valid :</b> {{ form.valid }}<br>
+  <b>form.status :</b> {{ form.status }}<br>
+  <b>date_debut.errors :</b> {{ form.get('date_debut')?.errors | json }}<br>
+  <b>date_fin.errors :</b> {{ form.get('date_fin')?.errors | json }}<br>
+  <b>motif.errors :</b> {{ form.get('motif')?.errors | json }}<br>
+  <b>nbJours :</b> {{ nbJours() }}<br>
+  <b>ventilation :</b> {{ ventilation() ? 'OK' : 'null' }}<br>
+  <b>soldeInsuffisant :</b> {{ soldeInsuffisant() }}<br>
+  <b>peutSoumettre :</b> {{ peutSoumettre() }}<br>
+  <b>totalDispo :</b> {{ totalDispo() }}
+</div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          {{ isLoading() ? 'Envoi en cours...' : 'Soumettre la demande' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
