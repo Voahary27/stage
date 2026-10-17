@@ -68,7 +68,7 @@
       </section>
 
       <!-- Bloc : Décision (si traitée) -->
-      @if (demande.demande_status !== 'en_attente') {
+      @if (demande.demande_status === 'acceptee' || demande.demande_status === 'refusee') {
         <section class="detail-section decision"
                  [class.decision-acceptee]="demande.demande_status === 'acceptee'"
                  [class.decision-refusee]="demande.demande_status === 'refusee'">
@@ -93,8 +93,8 @@
           <div class="detail-row">
             <span class="label">Décidé par</span>
             <span class="valeur">
-              @if (demande.admin_nom) {
-                {{ demande.admin_nom }} {{ demande.admin_prenom }}
+              @if (demande.validateur_nom) {
+                {{ demande.validateur_nom }} {{ demande.validateur_prenom }}
               } @else {
                 —
               }

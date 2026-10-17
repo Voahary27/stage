@@ -1,7 +1,7 @@
 <header class="dashboard-header">
   @if (profil(); as p) {
-    <h1>Bonjour {{ p.admin_nom }} {{ p.admin_prenom }}</h1>
-    <p class="subtitle">{{ p.admin_fonction }}</p>
+    <h1>Bonjour {{ p.utilisateur_nom }} {{ p.utilisateur_prenom }}</h1>
+    <p class="subtitle">{{ p.utilisateur_fonction }}</p>
   } @else {
     <h1>Bonjour</h1>
   }
@@ -100,8 +100,8 @@
                     }
                   </td>
                   <td class="actions-cell">
-                    <button class="btn-accept" (click)="accepter(d)" title="Accepter">✓</button>
-                    <button class="btn-refuse" (click)="refuser(d)" title="Refuser">✗</button>
+                    <button class="btn-accept" (click)="accepter(d)" [disabled]="isValidating()" title="Accepter">✓</button>
+                    <button class="btn-refuse" (click)="refuser(d)" [disabled]="isValidating()" title="Refuser">✗</button>
                   </td>
                   <td class="detail-cell">
                     <button class="btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>

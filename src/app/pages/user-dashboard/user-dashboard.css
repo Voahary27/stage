@@ -10,23 +10,9 @@
     box-sizing: border-box;
 }
 
-/* ===== Header ===== */
-.dashboard-header {
-    background-color: #ffffff;
-    color: #202124;
-    padding: 28px 32px;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
-}
-
-.dashboard-header h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 500;
-    color: #1a73e8;
-}
-
-/* ===== KPI Grid ===== */
+/* ═══════════════════════════════════════════
+   KPIs
+   ═══════════════════════════════════════════ */
 .kpi-section {
     padding: 24px 32px 0;
 }
@@ -69,7 +55,9 @@
     margin: 0;
 }
 
-/* ===== Actions ===== */
+/* ═══════════════════════════════════════════
+   Actions (Nouvelle demande)
+   ═══════════════════════════════════════════ */
 .actions-sections {
     padding: 32px 32px 0;
 }
@@ -109,7 +97,9 @@
     box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
 }
 
-/* ===== Table des demandes ===== */
+/* ═══════════════════════════════════════════
+   Section "Mes demandes"
+   ═══════════════════════════════════════════ */
 .demande-section {
     padding: 32px;
 }
@@ -128,14 +118,9 @@
     margin: 0;
 }
 
-.table-container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 8px;
-    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.1);
-    overflow-x: auto;
-}
-
+/* ═══════════════════════════════════════════
+   Pastilles de navigation (dots)
+   ═══════════════════════════════════════════ */
 .tabs-nav {
     display: flex;
     gap: 12px;
@@ -178,7 +163,9 @@
     background-color: #5f6368;
 }
 
-/* ===== Slider ===== */
+/* ═══════════════════════════════════════════
+   Slider (4 slides)
+   ═══════════════════════════════════════════ */
 .slider-viewport {
     overflow: hidden;
     border-radius: 12px;
@@ -189,13 +176,11 @@
 .slider-track {
     display: flex;
     width: 400%;
-    /* 4 slides */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slide {
     width: 25%;
-    /* 100% / 4 */
     flex-shrink: 0;
     padding: 8px;
     overflow-x: auto;
@@ -204,11 +189,13 @@
 .empty {
     text-align: center;
     color: #5f6368;
-    padding: 24px;
+    padding: 40px;
     font-size: 14px;
 }
 
-
+/* ═══════════════════════════════════════════
+   Tableau des demandes
+   ═══════════════════════════════════════════ */
 .demande-table {
     width: 100%;
     border-collapse: collapse;
@@ -240,7 +227,9 @@
     background-color: #f8f9fa;
 }
 
-/* ===== Badges statut ===== */
+/* ═══════════════════════════════════════════
+   Badges statut
+   ═══════════════════════════════════════════ */
 .badge-statut {
     display: inline-block;
     padding: 4px 10px;
@@ -265,10 +254,11 @@
     color: #c5221f;
 }
 
-/* ===== Responsive ===== */
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-    .dashboard-header,
     .kpi-section,
     .actions-sections,
     .demande-section {
@@ -276,17 +266,13 @@
         padding-right: 16px;
     }
 
-    .dashboard-header h1 {
-        font-size: 20px;
-    }
-
     .kpi-card p {
         font-size: 22px;
     }
 
     .demande-header {
-             flex-direction: column;
-             align-items: flex-start;
-             gap: 12px;
-         }
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
 }

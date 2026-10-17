@@ -7,6 +7,7 @@
     box-sizing: border-box;
 }
 
+
 .login-container {
     display: flex;
     justify-content: center;
@@ -17,9 +18,10 @@
 }
 
 .login-card {
+    position: relative;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: 48px;
     width: 100%;
     max-width: 900px;
@@ -43,14 +45,41 @@
     }
 }
 
+
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f3f4;
+    color: #5f6368;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.back-arrow:hover {
+    background: #e8eaed;
+    color: #1a73e8;
+    transform: translateX(-2px);
+}
+
+
 .login-header {
     flex: 1;
     text-align: left;
-    margin-bottom: 0;
+    padding-top: 8px;
 }
 
 .logo {
-    height:90px;
+    height: 90px;
     width: auto;
     margin-bottom: 20px;
 }
@@ -71,12 +100,35 @@
     max-width: 320px;
 }
 
-.login-form {
+
+.slider-viewport {
     flex: 1;
+    overflow: hidden;
+    min-width: 320px;
+}
+
+.slider-track {
+    display: flex;
+    width: 200%;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 14px 4px 0;
+     box-sizing: border-box;
+}
+
+.login-form {
     display: flex;
     flex-direction: column;
-    min-width: 300px;
+    min-width: 0;
+    padding-top: 8px;
+    padding-left:4px;
+
 }
+
 
 .form-input {
     position: relative;
@@ -120,10 +172,41 @@
 
 .form-input input:focus+label,
 .form-input input:not(:placeholder-shown)+label {
-    top: 0;
+    top: 0px;
     font-size: 12px;
     color: #1a73e8;
 }
+
+.form-input input[type="date"]+label {
+    top: 0;
+    font-size: 12px;
+}
+
+
+.register-form .form-input {
+    margin-bottom: 16px;
+}
+
+.register-form .form-input input {
+    padding: 16px 14px 6px;
+    font-size: 14px;
+}
+
+.register-form .form-input label {
+    font-size: 14px;
+}
+
+.register-form .form-input input:focus+label,
+.register-form .form-input input:not(:placeholder-shown)+label {
+    font-size: 11px;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
 
 .btn-login {
     width: 100%;
@@ -152,24 +235,72 @@
     cursor: not-allowed;
 }
 
+
+.switch-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #5f6368;
+}
+
+.switch-link .link {
+    background: none;
+    border: none;
+    color: #1a73e8;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0 4px;
+    font-family: inherit;
+    text-decoration: none;
+    transition: color 0.15s, text-decoration 0.15s;
+}
+
+.switch-link .link:hover {
+    color: #1765cc;
+    text-decoration: underline;
+}
+
+
 .field-error {
     display: block;
     color: #d93025;
     font-size: 12px;
     margin-top: 4px;
-    padding-left: 16px;
+    padding-left: 4px;
 }
 
 .global-error {
+    position: absolute;
+    bottom: 24px;
+    left: 56px;
+    right: 56px;
     color: #d93025;
     background-color: #fce8e6;
     border-radius: 6px;
     padding: 12px 16px;
-    margin-top: 16px;
     font-size: 14px;
     text-align: center;
+    border-left: 4px solid #d93025;
 }
 
+.global-success {
+    position: absolute;
+    bottom: 24px;
+    left: 56px;
+    right: 56px;
+    color: #137333;
+    background-color: #e6f4ea;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
+    border-left: 4px solid #34a853;
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
     .login-container {
         padding: 0;
@@ -185,7 +316,7 @@
         padding: 32px 24px;
         min-height: 100vh;
         max-width: 100%;
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .login-header {
@@ -204,4 +335,60 @@
     .logo {
         height: 50px;
     }
+
+    .slider-viewport {
+        min-width: 0;
+    }
+
+    .form-row-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .global-error,
+    .global-success {
+        position: static;
+        margin-top: 16px;
+    }
+}
+
+
+.form-input select {
+    width: 100%;
+    padding: 20px 16px 8px;
+    font-size: 16px;
+    color: #202124;
+    background-color: transparent;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235f6368' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px;
+}
+
+.form-input select:hover {
+    border-color: #5f6368;
+}
+
+.form-input select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8 inset;
+}
+
+/* Label du select : toujours en haut (car il y a toujours une valeur) */
+.form-input select+label {
+    top: -9px;
+    transform: translateY(0);
+    font-size: 12px;
+}
+
+/* Dans l'inscription, plus compact */
+.register-form .form-input select {
+    padding: 16px 14px 6px;
+    font-size: 14px;
 }

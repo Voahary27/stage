@@ -6,44 +6,39 @@ import { ModalRefus } from './modal/modal-refus/modal-refus';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
-  imports: [CommonModule,ModalDetailDemande, ModalRefus],
+  imports: [CommonModule, ModalDetailDemande, ModalRefus],
   selector: 'app-admin-dashboard',
   styleUrl: './admin-dashboard.css',
   templateUrl: './admin-dashboard.html',
 })
 export class AdminDashboard implements OnInit {
-   adminService = inject(AdminService);
-   private toast = inject(ToastService);
+  adminService = inject(AdminService);
+  private toast = inject(ToastService);
 
-  //  signal
   profil    = this.adminService.profil;
   kpis      = this.adminService.kpis;
   isLoading = this.adminService.isLoading;
 
-  // Les 3 listes 
   demandesEnAttente = this.adminService.demandesEnAttente;
   demandesAcceptees = this.adminService.demandesAcceptees;
   demandesRefusees  = this.adminService.demandesRefusees;
 
-  // onglet
   ongletActif = signal(0);
 
-  // modal detail
   demandeSelectionnee = signal<DemandeAdmin | null>(null);
+  demandeARefuser     = signal<DemandeAdmin | null>(null);
 
-  // modal refus
-   demandeARefuser = signal<DemandeAdmin | null>(null);
+  isValidating = signal(false);
 
-ngOnInit() {
+  ngOnInit() {
     this.adminService.chargerTout();
-
   }
 
   changerOnglet(index: number) {
     this.ongletActif.set(index);
   }
 
-  // pour ouvrir les details
+  // ─── Détails ─────────────────────────────────────────────
   ouvrirDetail(d: DemandeAdmin) {
     this.demandeSelectionnee.set(d);
   }
@@ -52,27 +47,33 @@ ngOnInit() {
     this.demandeSelectionnee.set(null);
   }
 
-  // accepter
-   accepter(d: DemandeAdmin) {
+  // ─── Accepter ────────────────────────────────────────────
+  accepter(d: DemandeAdmin) {
+    if (this.isValidating()) return;
+
     const label = `${d.utilisateur_nom} ${d.utilisateur_prenom}`;
     if (!confirm(`Accepter la demande de ${label} ?`)) return;
 
+    this.isValidating.set(true);
+
     this.adminService.accepter(d.demande_id).subscribe({
       next: (res) => {
+        this.isValidating.set(false);
         if (res.success) {
-          this.toast.success('Demande acceptée avec succès');
+          this.toast.success(res.message || 'Demande acceptée avec succès');
           this.adminService.chargerTout();
         } else {
           this.toast.error(res.message || 'Erreur');
         }
       },
       error: (err) => {
+        this.isValidating.set(false);
         this.toast.error(err.error?.message || 'Erreur serveur');
       }
     });
   }
 
-  // refuser
+  // ─── Refuser ─────────────────────────────────────────────
   refuser(d: DemandeAdmin) {
     this.demandeARefuser.set(d);
   }
@@ -83,10 +84,13 @@ ngOnInit() {
 
   confirmerRefus(motif: string) {
     const d = this.demandeARefuser();
-    if (!d) return;
+    if (!d || this.isValidating()) return;
+
+    this.isValidating.set(true);
 
     this.adminService.refuser(d.demande_id, motif).subscribe({
       next: (res) => {
+        this.isValidating.set(false);
         if (res.success) {
           this.toast.success('Demande refusée');
           this.demandeARefuser.set(null);
@@ -96,12 +100,13 @@ ngOnInit() {
         }
       },
       error: (err) => {
+        this.isValidating.set(false);
         this.toast.error(err.error?.message || 'Erreur serveur');
       }
     });
   }
 
-  //formattage 
+  // ─── Formatage ───────────────────────────────────────────
   formatDates(d: DemandeAdmin): string {
     const debut = new Date(d.demande_date_debut).toLocaleDateString('fr-FR');
     if (!d.demande_date_fin) return debut;
@@ -135,10 +140,4 @@ ngOnInit() {
       hour: '2-digit', minute: '2-digit'
     });
   }
-
-  formatAdmin(d: DemandeAdmin): string {
-    if (!d.admin_nom) return '—';
-    return `${d.admin_nom} ${d.admin_prenom}`;
-  }
-
 }

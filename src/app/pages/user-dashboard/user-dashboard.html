@@ -1,93 +1,82 @@
-<!-- Header -->
-<header class="dashboard-header">
-         @if (profil(); as p) {
-      <h1>Bonjour {{ p.utilisateur_nom }} {{ p.utilisateur_prenom }} </h1>
-    } @else {
-      <h1>Bonjour</h1>
-    }
-     </header>
+<app-navbar></app-navbar>
 
-     <section class="kpi-section">
-      @if(kpis(); as k) {
+
+<section class="kpi-section">
+  @if (kpis(); as k) {
     <div class="kpi-grid">
 
-        <div class="kpi-card">
-          <h2>Solde Actuel</h2>
-          <p>{{ k.solde_restant }} j restantes </p>
-        </div>
-        <div class="kpi-card">
-          <h2>Jours Pris </h2>
-          <p>{{ k.jours_pris }} j </p>
-        </div> 
-        <div class="kpi-card">
-          <h2>Demande en Attente</h2>
-          <p>{{k.en_attentes}}</p>
-        </div>
-        <div class="kpi-card">
-          <h2>Demande Acceptées</h2>
-          <p>{{k.acceptees}}</p>
-        </div>
-        <div class="kpi-card">
-          <h2>Demande Refusées</h2>
-          <p>{{k.refusees}}</p> 
+      <div class="kpi-card">
+        <h2>Solde Actuel</h2>
+        <p>{{ k.solde_restant }} j restantes</p>
+      </div>
+
+      <div class="kpi-card">
+        <h2>Jours Pris</h2>
+        <p>{{ k.jours_pris }} j</p>
+      </div>
+
+      <div class="kpi-card">
+        <h2>Demande en Attente</h2>
+        <p>{{ k.en_attentes }}</p>
+      </div>
+
+      <div class="kpi-card">
+        <h2>Demande Acceptées</h2>
+        <p>{{ k.acceptees }}</p>
+      </div>
+
+      <div class="kpi-card">
+        <h2>Demande Refusées</h2>
+        <p>{{ k.refusees }}</p>
       </div>
 
     </div>
   }
+</section>
 
-       
-     </section>
-     <section class="actions-sections">
-       <h2>Nouvelle demande</h2>
-          <div class="actions-grid">
-            <button class="action-card" (click) = "ouvrirModalConge()">
-              <p>Demander un congé</p>
-            </button>
-            <button class="action-card" (click)="ouvrirModalPermission()">
-              <p>Demander une permissions</p>
-            </button>
-          </div>
+<section class="actions-sections">
+  <h2>Nouvelle demande</h2>
+  <div class="actions-grid">
 
-     </section>
+    <button class="action-card" (click)="ouvrirModalConge()">
+      <p>Demander un congé</p>
+    </button>
 
-    <section class="demande-section">
+    <button class="action-card" (click)="ouvrirModalPermission()">
+      <p>Demander une permission</p>
+    </button>
+
+  </div>
+</section>
+
+<section class="demande-section">
+
   <div class="demande-header">
     <h2>Mes Demandes</h2>
 
-    <!-- Pastilles de navigation -->
     <div class="tabs-nav">
-      <button
-        class="dot dot-jaune"
-        [class.active]="ongletActif() === 0"
-        (click)="changerOnglet(0)"
-        title="En attente">
-      </button>
-      <button
-        class="dot dot-vert"
-        [class.active]="ongletActif() === 1"
-        (click)="changerOnglet(1)"
-        title="Acceptées">
-      </button>
-      <button
-        class="dot dot-rouge"
-        [class.active]="ongletActif() === 2"
-        (click)="changerOnglet(2)"
-        title="Refusées">
-      </button>
-      <button
-        class="dot dot-gris"
-        [class.active]="ongletActif() === 3"
-        (click)="changerOnglet(3)"
-        title="Toutes">
-      </button>
+      <button class="dot dot-jaune"
+              [class.active]="ongletActif() === 0"
+              (click)="changerOnglet(0)"
+              title="En attente"></button>
+      <button class="dot dot-vert"
+              [class.active]="ongletActif() === 1"
+              (click)="changerOnglet(1)"
+              title="Acceptées"></button>
+      <button class="dot dot-rouge"
+              [class.active]="ongletActif() === 2"
+              (click)="changerOnglet(2)"
+              title="Refusées"></button>
+      <button class="dot dot-gris"
+              [class.active]="ongletActif() === 3"
+              (click)="changerOnglet(3)"
+              title="Toutes"></button>
     </div>
   </div>
 
-  <!-- Slider -->
   <div class="slider-viewport">
     <div class="slider-track" [style.transform]="'translateX(-' + (ongletActif() * 25) + '%)'">
 
-      <!-- Slide 1 : En attente -->
       <div class="slide">
         @if (demandesEnAttente().length > 0) {
           <table class="demande-table">
@@ -109,7 +98,6 @@
         }
       </div>
 
-      <!-- Slide 2 : Acceptées -->
       <div class="slide">
         @if (demandesAcceptees().length > 0) {
           <table class="demande-table">
@@ -131,7 +119,6 @@
         }
       </div>
 
-      <!-- Slide 3 : Refusées -->
       <div class="slide">
         @if (demandesRefusees().length > 0) {
           <table class="demande-table">
@@ -153,7 +140,6 @@
         }
       </div>
 
-      <!-- Slide 4 : Toutes -->
       <div class="slide">
         @if (demandesToutes().length > 0) {
           <table class="demande-table">

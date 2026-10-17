@@ -113,18 +113,6 @@
           Annuler
         </button>
 
-        <div style="background: #ffe; padding: 12px; margin: 12px 0; font-size: 12px; font-family: monospace; border: 1px solid #ccc;">
-  <b>form.valid :</b> {{ form.valid }}<br>
-  <b>form.status :</b> {{ form.status }}<br>
-  <b>date_debut.errors :</b> {{ form.get('date_debut')?.errors | json }}<br>
-  <b>date_fin.errors :</b> {{ form.get('date_fin')?.errors | json }}<br>
-  <b>motif.errors :</b> {{ form.get('motif')?.errors | json }}<br>
-  <b>nbJours :</b> {{ nbJours() }}<br>
-  <b>ventilation :</b> {{ ventilation() ? 'OK' : 'null' }}<br>
-  <b>soldeInsuffisant :</b> {{ soldeInsuffisant() }}<br>
-  <b>peutSoumettre :</b> {{ peutSoumettre() }}<br>
-  <b>totalDispo :</b> {{ totalDispo() }}
-</div>
 
         <button type="submit" class="btn-primary" [disabled]="isLoading()">
           {{ isLoading() ? 'Envoi en cours...' : 'Soumettre la demande' }}

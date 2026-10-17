@@ -1,61 +1,178 @@
 <div class="login-container">
   <div class="login-card">
 
-    <!-- Header : Logo + Bienvenue -->
+    
+    @if (mode() === 'register') {
+      <button class="back-arrow" type="button" (click)="switchMode('login')" aria-label="Retour">
+        ←
+      </button>
+    }
+
+    <!-- Header -->
     <div class="login-header">
       <img src="logo.png" alt="Logo" class="logo" />
-      <h1>Connexion</h1>
-      <p>Veuillez entrer vos identifiants pour accéder à la gestion des congés et permissions.</p>
+
+      @if (mode() === 'login') {
+        <h1>Connexion</h1>
+        <p>Veuillez entrer vos identifiants pour accéder à la gestion des congés et permissions.</p>
+      } @else {
+        <h1>Inscription</h1>
+        <p>Créez votre compte pour commencer à gérer vos demandes.</p>
+      }
     </div>
 
-    <!-- Formulaire -->
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <!--  slider -->
+    <div class="slider-viewport">
+      <div class="slider-track" [style.transform]="'translateX(' + (mode() === 'login' ? '0' : '-50%') + ')'">
 
-      <!-- Champ Matricule -->
-      <div class="form-input">
-        <input
-          type="text"
-          id="matricule"
-          formControlName="matricule"
-          placeholder=" "
-          autocomplete="username"
-        />
-        <label for="matricule">Matricule</label>
-        @if (loginForm.get('matricule')?.invalid && loginForm.get('matricule')?.touched) {
-          <span class="field-error">Le matricule est obligatoire.</span>
-        }
+        <!--  CONNEXION -->
+        <div class="slide">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" class="login-form">
+
+            <div class="form-input">
+              <input type="text" id="matricule" formControlName="matricule" placeholder=" " autocomplete="username" />
+              <label for="matricule">Matricule</label>
+              @if (loginForm.get('matricule')?.invalid && loginForm.get('matricule')?.touched) {
+                <span class="field-error">Le matricule est obligatoire.</span>
+              }
+            </div>
+
+            <div class="form-input">
+              <input type="password" id="password" formControlName="password" placeholder=" " autocomplete="current-password" />
+              <label for="password">Mot de passe</label>
+              @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <span class="field-error">Le mot de passe est obligatoire.</span>
+              }
+            </div>
+
+            <button type="submit" class="btn-login" [disabled]="isLoading()">
+              {{ isLoading() ? 'Connexion en cours...' : 'Se connecter' }}
+            </button>
+
+            <!-- Lien bas de page -->
+            <div class="switch-link">
+              Pas encore de compte ?
+              <button type="button" class="link" (click)="switchMode('register')">S'inscrire</button>
+            </div>
+
+          </form>
+        </div>
+
+        <!--  INSCRIPTION -->
+        <div class="slide">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()" class="login-form register-form">
+
+            <div class="form-row-2">
+              <div class="form-input">
+                <input type="text" id="r-matricule" formControlName="matricule" placeholder=" " />
+                <label for="r-matricule">Matricule *</label>
+                @if (registerForm.get('matricule')?.invalid && registerForm.get('matricule')?.touched) {
+                  <span class="field-error">Requis</span>
+                }
+              </div>
+
+              <div class="form-input">
+                <input type="date" id="r-date" formControlName="date_service" placeholder=" " />
+                <label for="r-date">Prise de service *</label>
+                @if (registerForm.get('date_service')?.invalid && registerForm.get('date_service')?.touched) {
+                  <span class="field-error">Requis</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-input">
+                <input type="text" id="r-nom" formControlName="nom" placeholder=" " />
+                <label for="r-nom">Nom *</label>
+                @if (registerForm.get('nom')?.invalid && registerForm.get('nom')?.touched) {
+                  <span class="field-error">Requis</span>
+                }
+              </div>
+
+              <div class="form-input">
+                <input type="text" id="r-prenom" formControlName="prenom" placeholder=" " />
+                <label for="r-prenom">Prénom *</label>
+                @if (registerForm.get('prenom')?.invalid && registerForm.get('prenom')?.touched) {
+                  <span class="field-error">Requis</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-input">
+                <input type="email" id="r-email" formControlName="email" placeholder=" " />
+                <label for="r-email">Email</label>
+              </div>
+
+              <div class="form-input">
+                <input type="text" id="r-contact" formControlName="contact" placeholder=" " />
+                <label for="r-contact">Contact</label>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-input">
+                <input type="text" id="r-fonction" formControlName="fonction" placeholder=" " />
+                <label for="r-fonction">Fonction</label>
+              </div>
+
+              <div class="form-input">
+  <select id="r-service" formControlName="service">
+    <option value="">selectionner service</option>
+    @for (s of services(); track s.service_id) {
+      <option [value]="s.service_id">{{ s.service_nom }}</option>
+    }
+  </select>
+  <label for="r-service">Service *</label>
+  @if (registerForm.get('service')?.invalid && registerForm.get('service')?.touched) {
+    <span class="field-error">Requis</span>
+  }
+</div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-input">
+                <input type="text" id="r-direction" formControlName="direction" placeholder=" " />
+                <label for="r-direction">Direction</label>
+              </div>
+
+              <div class="form-input">
+                <input type="text" id="r-corps" formControlName="corps" placeholder=" " />
+                <label for="r-corps">Corps</label>
+              </div>
+            </div>
+
+            <div class="form-input">
+              <input type="password" id="r-password" formControlName="password" placeholder=" " autocomplete="new-password" />
+              <label for="r-password">Mot de passe * (min. 6 car.)</label>
+              @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                <span class="field-error">Minimum 6 caractères</span>
+              }
+            </div>
+
+            <button type="submit" class="btn-login" [disabled]="isLoading()">
+              {{ isLoading() ? 'Inscription...' : "S'inscrire" }}
+            </button>
+
+            <!-- Lien bas de page -->
+            <div class="switch-link">
+              Vous avez déjà un compte ?
+              <button type="button" class="link" (click)="switchMode('login')">Se connecter</button>
+            </div>
+
+          </form>
+        </div>
+
       </div>
+    </div>
 
-      <!-- Champ Mot de passe -->
-      <div class="form-input">
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          placeholder=" "
-          autocomplete="current-password"
-        />
-        <label for="password">Mot de passe</label>
-        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-          <span class="field-error">Le mot de passe est obligatoire.</span>
-        }
-      </div>
-
-      <!-- Bouton -->
-      <button type="submit" class="btn-login" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <span>Connexion en cours...</span>
-        } @else {
-          <span>Se connecter</span>
-        }
-      </button>
-
-      <!-- Message d'erreur global -->
-      @if (errorMessage()) {
-        <div class="global-error">{{ errorMessage() }}</div>
-      }
-
-    </form>
+    <!-- Messages globaux (en dehors du slider) -->
+    @if (errorMessage()) {
+      <div class="global-error">{{ errorMessage() }}</div>
+    }
+    @if (successMessage()) {
+      <div class="global-success">{{ successMessage() }}</div>
+    }
 
   </div>
 </div>

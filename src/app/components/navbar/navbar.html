@@ -1,0 +1,37 @@
+<header class="navbar">
+  
+  <div class="navbar-left">
+    @if (profil(); as p) {
+      <span class="greeting">Bonjour {{ p.utilisateur_nom }} {{ p.utilisateur_prenom }}</span>
+    }@else {
+      <span class="greeting">Bonjour</span>
+    }
+  </div>
+
+  <!--icon de navigation -->
+  <div class="navbar-right">
+    @if (peutVoirDemandesRecues()) {
+    <button
+      class="nav-icon-btn"
+      [class.active]="router.url === '/demandes-recues'"
+      (click)="allerDemandesRecues()"
+      title="Demandes reçues">
+      <img src="service.png" alt="Service" />
+    </button>
+  }
+     <button
+      class="nav-icon-btn"
+      [class.active]="router.url === '/user-Home'"
+      (click)="allerAccueil()"
+      title="Accueil">
+      <img src="home.png" alt="Accueil" />
+    </button>
+    <button
+      class="nav-icon-btn"
+      [class.active]="router.url === '/profil'"
+      (click)="allerProfil()"
+      title="Mon profil">
+      <img src="account.png" alt="Profil" />
+    </button>
+  </div>
+</header>

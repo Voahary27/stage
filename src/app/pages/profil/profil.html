@@ -1,0 +1,122 @@
+<app-navbar></app-navbar>
+
+<main class="profil-container">
+
+  <h1 class="page-title">Mon profil</h1>
+
+  <!-- ═══════════════════════════════════════════
+       INFORMATIONS PERSONNELLES
+       ═══════════════════════════════════════════ -->
+  <section class="card">
+    <h2>Informations personnelles</h2>
+
+    @if (profil(); as p) {
+      <div class="info-grid">
+
+        <div class="info-row">
+          <span class="label">Matricule</span>
+          <span class="valeur">{{ p.utilisateur_matricule || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Nom</span>
+          <span class="valeur">{{ p.utilisateur_nom || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Prénom</span>
+          <span class="valeur">{{ p.utilisateur_prenom || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Email</span>
+          <span class="valeur">{{ p.utilisateur_email || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Contact</span>
+          <span class="valeur">{{ p.utilisateur_contact || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Fonction</span>
+          <span class="valeur">{{ p.utilisateur_fonction || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Service</span>
+          <span class="valeur">{{ p.service_nom || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Direction</span>
+          <span class="valeur">{{ p.utilisateur_direction || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Corps</span>
+          <span class="valeur">{{ p.utilisateur_corps || '—' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Prise de service</span>
+          <span class="valeur">{{ formatDate(p.utilisateur_date_prise_service) }}</span>
+        </div>
+
+      </div>
+    } @else {
+      <p class="empty">Chargement du profil...</p>
+    }
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAT DU SOLDE
+       ═══════════════════════════════════════════ -->
+  <section class="card">
+    <h2>État du solde</h2>
+
+    @if (soldes().length > 0) {
+      <div class="table-container">
+        <table class="solde-table">
+          <thead>
+            <tr>
+              <th>Année</th>
+              <th class="right">Solde initial</th>
+              <th class="right">Déjà consommé</th>
+              <th class="right">Reliquat</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of soldes(); track s.solde_annuel_annee) {
+              <tr>
+                <td><strong>{{ s.solde_annuel_annee }}</strong></td>
+                <td class="right">30 j</td>
+                <td class="right">
+                  <span class="solde-consomme">{{ 30 - s.solde_annuel_valeur }} j</span>
+                </td>
+                <td class="right">
+                  <strong class="solde-actuel">{{ s.solde_annuel_valeur }} j</strong>
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td><strong>TOTAL</strong></td>
+              <td class="right"><strong>{{ totalInitial() }} j</strong></td>
+              <td class="right">
+                <strong class="total-consomme">{{ totalInitial() - totalActuel() }} j</strong>
+              </td>
+              <td class="right">
+                <strong class="total">{{ totalActuel() }} j</strong>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    } @else {
+      <p class="empty">Aucun solde enregistré.</p>
+    }
+  </section>
+
+</main>

@@ -2,12 +2,18 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 
-// types 
+// ═══════════════════════════════════════════════════════════════
+// Types
+// ═══════════════════════════════════════════════════════════════
+
 export interface AdminProfil {
-  admin_matricule: string;
-  admin_nom: string;
-  admin_prenom: string;
-  admin_fonction: string;
+  utilisateur_matricule: string;
+  utilisateur_nom: string;
+  utilisateur_prenom: string;
+  utilisateur_fonction: string;
+  utilisateur_role: string;
+  utilisateur_service: number;
+  service_nom: string | null;
 }
 
 export interface AdminKpis {
@@ -30,22 +36,25 @@ export interface DemandeAdmin {
   demande_date_creation: string;
   demande_date_decision: string | null;
   demande_status: string;
+  demande_niveau_validation: number;
   demande_lieu_jouissance: string | null;
   demande_motif_refus: string | null;
+  demande_matricule_decision: string | null;
   utilisateur_matricule: string;
-  admin_matricule: string | null;
   utilisateur_nom: string;
   utilisateur_prenom: string;
-  utilisateur_service: string;
-  admin_nom: string | null;
-  admin_prenom: string | null;
-  admin_fonction: string | null;
+  utilisateur_service: number;
+  service_nom: string | null;
+  validateur_nom: string | null;
+  validateur_prenom: string | null;
   nb_jours: number;
   ventilation: VentilationItem[];
   titre_annees: string;
 }
 
-
+// ═══════════════════════════════════════════════════════════════
+// Service
+// ═══════════════════════════════════════════════════════════════
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -57,21 +66,24 @@ export class AdminService {
   demandes  = signal<DemandeAdmin[]>([]);
   isLoading = signal(false);
 
-//   filtre
- demandesEnAttente = computed(() =>
-    this.demandes().filter(d => d.demande_status === 'en_attente')
+  // Demandes à valider par l'admin (niveau 2)
+  demandesEnAttente = computed(() =>
+    this.demandes().filter(d =>
+      d.demande_status === 'en_attente' && d.demande_niveau_validation === 2
+    )
   );
 
-   demandesAcceptees = computed(() =>
+  // Demandes acceptées
+  demandesAcceptees = computed(() =>
     this.demandes().filter(d => d.demande_status === 'acceptee')
   );
 
+  // Demandes refusées
   demandesRefusees = computed(() =>
     this.demandes().filter(d => d.demande_status === 'refusee')
   );
 
-//   chargement initial (profil , kpis , demandes )
-chargerTout() {
+  chargerTout() {
     this.isLoading.set(true);
 
     return forkJoin({
@@ -95,36 +107,17 @@ chargerTout() {
     });
   }
 
-  // Rafraîchir uniquement les demandes
-  chargerDemandes() {
-    return this.http.get<any>(`${this.apiUrl}/admin_demandes.php`).subscribe({
-      next: (res) => {
-        if (res.success) this.demandes.set(res.demandes);
-      },
-      error: (err) => console.error('Erreur admin_demandes.php:', err)
-    });
-  }
-
-  // accepter une demande
-   accepter(demandeId: number) {
+  accepter(demandeId: number) {
     return this.http.post<{ success: boolean; message: string }>(
       `${this.apiUrl}/demande_valider.php`,
-      {
-        demande_id: demandeId,
-        decision: 'acceptee'
-      }
+      { demande_id: demandeId, decision: 'acceptee' }
     );
   }
 
-  // Refuser une demande
   refuser(demandeId: number, motifRefus: string) {
     return this.http.post<{ success: boolean; message: string }>(
       `${this.apiUrl}/demande_valider.php`,
-      {
-        demande_id: demandeId,
-        decision: 'refusee',
-        motif_refus: motifRefus
-      }
+      { demande_id: demandeId, decision: 'refusee', motif_refus: motifRefus }
     );
   }
 }

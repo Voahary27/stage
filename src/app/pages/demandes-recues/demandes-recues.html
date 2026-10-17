@@ -1,0 +1,216 @@
+<app-navbar></app-navbar>
+
+<main class="recues-container">
+
+  <div class="page-header">
+    <h1>Demandes reçues</h1>
+    <p class="subtitle">
+      Demandes à valider à votre niveau
+      ({{ role() === 'chef' ? 'Chef de service' : 'SG' }})
+    </p>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+
+    <div class="demande-header">
+      <h2>Liste des demandes</h2>
+
+      <div class="tabs-nav">
+        <button class="dot dot-jaune"
+                [class.active]="ongletActif() === 0"
+                (click)="changerOnglet(0)"
+                title="En attente">
+          <span class="dot-count">{{ demandesEnAttente().length }}</span>
+        </button>
+        <button class="dot dot-vert"
+                [class.active]="ongletActif() === 1"
+                (click)="changerOnglet(1)"
+                title="Acceptées">
+          <span class="dot-count">{{ demandesAcceptees().length }}</span>
+        </button>
+        <button class="dot dot-rouge"
+                [class.active]="ongletActif() === 2"
+                (click)="changerOnglet(2)"
+                title="Refusées">
+          <span class="dot-count">{{ demandesRefusees().length }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="slider-viewport">
+      <div class="slider-track" [style.transform]="'translateX(-' + (ongletActif() * 33.333) + '%)'">
+
+        <!-- ═══ Slide 1 : En attente ═══ -->
+        <div class="slide">
+          @if (demandesEnAttente().length > 0) {
+            <table class="demande-table">
+              <thead>
+                <tr>
+                  <th>Demandé le</th>
+                  <th>Type</th>
+                  <th>Demandeur</th>
+                  <th>Dates prévues</th>
+                  <th>Jours</th>
+                  <th>Actions</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (d of demandesEnAttente(); track d.demande_id) {
+                  <tr>
+                    <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                    <td>
+                      <span class="badge-type" [class]="'type-' + d.demande_type">
+                        {{ d.demande_type }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ d.utilisateur_nom }} {{ d.utilisateur_prenom }}</strong>
+                        <small>{{ d.utilisateur_matricule }} — {{ d.service_nom }}</small>
+                      </div>
+                    </td>
+                    <td>{{ formatDates(d) }}</td>
+                    <td>
+                      @if (d.demande_type === 'conge') {
+                        <strong>{{ d.nb_jours }} j</strong>
+                      } @else {
+                        <span class="na">N/A</span>
+                      }
+                    </td>
+                    <td class="actions-cell">
+                      <button class="btn-accept" (click)="accepter(d)" title="Accepter">✓</button>
+                      <button class="btn-refuse" (click)="refuser(d)" title="Refuser">✗</button>
+                    </td>
+                    <td class="detail-cell">
+                      <button class="btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="empty">Aucune demande en attente.</p>
+          }
+        </div>
+
+        <!-- ═══ Slide 2 : Acceptées ═══ -->
+        <div class="slide">
+          @if (demandesAcceptees().length > 0) {
+            <table class="demande-table">
+              <thead>
+                <tr>
+                  <th>Demandé le</th>
+                  <th>Type</th>
+                  <th>Demandeur</th>
+                  <th>Dates prévues</th>
+                  <th>Jours</th>
+                  <th>Statut</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (d of demandesAcceptees(); track d.demande_id) {
+                  <tr>
+                    <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                    <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ d.utilisateur_nom }} {{ d.utilisateur_prenom }}</strong>
+                        <small>{{ d.utilisateur_matricule }}</small>
+                      </div>
+                    </td>
+                    <td>{{ formatDates(d) }}</td>
+                    <td>
+                      @if (d.demande_type === 'conge') {
+                        <strong>{{ d.nb_jours }} j</strong>
+                      } @else {
+                        <span class="na">N/A</span>
+                      }
+                    </td>
+                    <td><span class="badge-statut statut-acceptee">acceptée</span></td>
+                    <td class="detail-cell">
+                      <button class="btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="empty">Aucune demande acceptée.</p>
+          }
+        </div>
+
+        <!-- ═══ Slide 3 : Refusées ═══ -->
+        <div class="slide">
+          @if (demandesRefusees().length > 0) {
+            <table class="demande-table">
+              <thead>
+                <tr>
+                  <th>Demandé le</th>
+                  <th>Type</th>
+                  <th>Demandeur</th>
+                  <th>Dates prévues</th>
+                  <th>Jours</th>
+                  <th>Statut</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (d of demandesRefusees(); track d.demande_id) {
+                  <tr>
+                    <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                    <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ d.utilisateur_nom }} {{ d.utilisateur_prenom }}</strong>
+                        <small>{{ d.utilisateur_matricule }}</small>
+                      </div>
+                    </td>
+                    <td>{{ formatDates(d) }}</td>
+                    <td>
+                      @if (d.demande_type === 'conge') {
+                        {{ d.nb_jours }} j
+                      } @else {
+                        <span class="na">N/A</span>
+                      }
+                    </td>
+                    <td><span class="badge-statut statut-refusee">refusée</span></td>
+                    <td class="detail-cell">
+                      <button class="btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="empty">Aucune demande refusée.</p>
+          }
+        </div>
+
+      </div>
+    </div>
+
+  }
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODALES
+     ═══════════════════════════════════════════════════════════ -->
+@if (demandeSelectionnee(); as d) {
+  <app-modal-detail-demande
+    [demande]="d"
+    (fermer)="fermerDetail()">
+  </app-modal-detail-demande>
+}
+
+@if (demandeARefuser(); as d) {
+  <app-modal-refus
+    [demandeId]="d.demande_id"
+    (confirmer)="confirmerRefus($event)"
+    (annuler)="fermerModalRefus()">
+  </app-modal-refus>
+}
