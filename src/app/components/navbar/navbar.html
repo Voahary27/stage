@@ -10,6 +10,25 @@
 
   <!--icon de navigation -->
   <div class="navbar-right">
+
+    <button
+      class="nav-icon-btn"
+      [class.active]="router.url === '/user-Home'"
+      (click)="allerAccueil()"
+      title="Accueil">
+      <img src="home.png" alt="Accueil" />
+    </button>
+
+    @if (estAdmin()) {
+    <button
+      class="nav-icon-btn"
+      [class.active]="router.url === '/gestion-utilisateurs'"
+      (click)="allerGestionUtilisateurs()"
+      title="Gestion des utilisateurs">
+      <img src="group.png" alt="Gestion" />
+    </button>
+  }
+
     @if (peutVoirDemandesRecues()) {
     <button
       class="nav-icon-btn"
@@ -19,13 +38,7 @@
       <img src="service.png" alt="Service" />
     </button>
   }
-     <button
-      class="nav-icon-btn"
-      [class.active]="router.url === '/user-Home'"
-      (click)="allerAccueil()"
-      title="Accueil">
-      <img src="home.png" alt="Accueil" />
-    </button>
+     
     <button
       class="nav-icon-btn"
       [class.active]="router.url === '/profil'"

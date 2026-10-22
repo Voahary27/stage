@@ -276,3 +276,91 @@
         gap: 12px;
     }
 }
+
+/* ═══════════════════════════════════════════
+   Colonnes du tableau
+   ═══════════════════════════════════════════ */
+.date-creation {
+    white-space: nowrap;
+    color: #5f6368;
+    font-size: 13px;
+}
+
+.badge-type {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.type-conge {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.type-permission {
+    background: #fef7e0;
+    color: #b06000;
+}
+
+.na {
+    color: #9aa0a6;
+    font-style: italic;
+}
+
+/* ═══════════════════════════════════════════
+   Actions
+   ═══════════════════════════════════════════ */
+.actions-cell {
+    display: flex;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.btn-detail {
+    background: #f1f3f4;
+    color: #5f6368;
+}
+
+.btn-detail:hover {
+    background: #1a73e8;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.btn-delete:hover {
+    background: #ea4335;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-pdf {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.btn-pdf:hover {
+    background: #34a853;
+    color: #fff;
+    transform: scale(1.05);
+}

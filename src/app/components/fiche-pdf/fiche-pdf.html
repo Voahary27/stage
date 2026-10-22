@@ -1,0 +1,192 @@
+<div class="fiche-container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       FICHE DE CONGÉ
+       ═══════════════════════════════════════════════════════ -->
+  @if (demande?.demande_type === 'conge') {
+    <div class="fiche fiche-conge">
+
+      <!-- En-tête -->
+      <div class="entete">
+        <div class="entete-top">
+          <strong>REPOBLIKAN'I MADAGASIKARA</strong><br>
+          <em>Fitiavana - Tanindrazana - Fandrosoana</em>
+        </div>
+        <div class="entete-sep">- - - - - - - - - - - - - - - - - - - - -</div>
+        <div class="entete-ministere">
+          MINISTERE DU TRAVAIL, DE L'EMPLOI<br>
+          ET DE LA FONCTION PUBLIQUE<br>
+          SECRETARIAT GENERAL<br>
+          INSTITUT NATIONAL DU TRAVAIL
+        </div>
+      </div>
+
+      <!-- Titre -->
+      <h1 class="titre-fiche">FICHE DE JOUISSANCE DE CONGÉ</h1>
+      <div class="numero">
+        N° {{ demande.demande_id }}/{{ annee() }}/INTra/SGF
+      </div>
+      <div class="date-emission">Du {{ aujourdhui }}</div>
+
+      <!-- Informations agent -->
+      <table class="infos-table">
+        <tr>
+          <td class="label">NOM Prénom(s) :</td>
+          <td class="valeur">{{ profil?.utilisateur_nom }} {{ profil?.utilisateur_prenom }}</td>
+        </tr>
+        <tr>
+          <td class="label">IM :</td>
+          <td class="valeur">{{ profil?.utilisateur_matricule }}</td>
+        </tr>
+        <tr>
+          <td class="label">Corps :</td>
+          <td class="valeur">{{ profil?.utilisateur_corps || '—' }}</td>
+        </tr>
+        <tr>
+          <td class="label">Direction :</td>
+          <td class="valeur">{{ profil?.utilisateur_direction || '—' }}</td>
+        </tr>
+        <tr>
+          <td class="label">Fonction :</td>
+          <td class="valeur">{{ profil?.utilisateur_fonction || '—' }}</td>
+        </tr>
+      </table>
+
+      <!-- Congé -->
+      <table class="congé-table">
+        <tr>
+          <td class="label">Droit de congé au titre de l'année :</td>
+          <td class="valeur">{{ anneesImpactees() }}</td>
+        </tr>
+        <tr>
+          <td class="label">Nombre de jours demandés :</td>
+          <td class="valeur">{{ nbJours() }} jour(s)</td>
+        </tr>
+        <tr>
+          <td class="label">Reliquat :</td>
+          <td class="valeur">{{ reliquat() }}</td>
+        </tr>
+        <tr>
+          <td class="label">Départ :</td>
+          <td class="valeur">{{ formatDate(demande.demande_date_debut) }}</td>
+        </tr>
+        <tr>
+          <td class="label">Fin :</td>
+          <td class="valeur">{{ formatDate(demande.demande_date_fin) }}</td>
+        </tr>
+        <tr>
+          <td class="label">Lieu de jouissance (adresse exacte) :</td>
+          <td class="valeur">{{ demande.demande_lieu_jouissance || '—' }}</td>
+        </tr>
+      </table>
+
+      <!-- Signatures -->
+      <table class="signatures">
+        <tr>
+          <td>L'agent</td>
+          <td>Le Chef direct</td>
+          <td>Le SGF</td>
+          <td>Le Directeur</td>
+        </tr>
+        <tr class="signature-lignes">
+          <td>________________</td>
+          <td>________________</td>
+          <td>________________</td>
+          <td>
+            <!-- Signature du directeur (image) -->
+            <img src="signature_directeur.png" alt="Signature" class="signature-img" />
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  }
+
+  <!-- ═══════════════════════════════════════════════════════
+       FICHE DE PERMISSION
+       ═══════════════════════════════════════════════════════ -->
+  @if (demande?.demande_type === 'permission') {
+    <div class="fiche fiche-permission">
+
+      <!-- En-tête -->
+      <div class="entete">
+        <div class="entete-top">
+          <strong>REPOBLIKAN'I MADAGASIKARA</strong><br>
+          <em>Fitiavana - Tanindrazana - Fandrosoana</em>
+        </div>
+        <div class="entete-sep">- - - - - - - - - - - - - - - - - - - - -</div>
+        <div class="entete-ministere">
+          MINISTERE DU TRAVAIL, DE L'EMPLOI<br>
+          ET DE LA FONCTION PUBLIQUE<br>
+          SECRETARIAT GENERAL<br>
+          INSTITUT NATIONAL DU TRAVAIL
+        </div>
+      </div>
+
+      <!-- Titre -->
+      <h1 class="titre-fiche">FICHE DE PERMISSION</h1>
+      <div class="numero">
+        N° {{ demande.demande_id }}/{{ annee() }}/INTra/SGF
+      </div>
+
+      <!-- Informations agent -->
+      <table class="infos-table">
+        <tr>
+          <td class="label">NOM :</td>
+          <td class="valeur">{{ profil?.utilisateur_nom }}</td>
+        </tr>
+        <tr>
+          <td class="label">Prénom(s) :</td>
+          <td class="valeur">{{ profil?.utilisateur_prenom }}</td>
+        </tr>
+        <tr>
+          <td class="label">Matricule (IM) :</td>
+          <td class="valeur">{{ profil?.utilisateur_matricule }}</td>
+        </tr>
+        <tr>
+          <td class="label">Fonction :</td>
+          <td class="valeur">{{ profil?.utilisateur_fonction || '—' }}</td>
+        </tr>
+        <tr>
+          <td class="label">Service :</td>
+          <td class="valeur">{{ profil?.service_nom || '—' }}</td>
+        </tr>
+      </table>
+
+      <!-- Permission -->
+      <table class="permission-table">
+        <tr>
+          <td class="label">Se rendre à :</td>
+          <td class="valeur">{{ demande.demande_lieu_jouissance || '—' }}</td>
+        </tr>
+        <tr>
+          <td class="label">Motif :</td>
+          <td class="valeur">{{ demande.demande_motif || '—' }}</td>
+        </tr>
+      </table>
+
+      <!-- Lieu et date -->
+      <div class="lieu-date">
+        Antananarivo, le {{ aujourdhui }}
+      </div>
+
+      <!-- Signatures -->
+      <table class="signatures signatures-permission">
+        <tr>
+          <td>Le Demandeur</td>
+          <td>Le Chef Hiérarchique</td>
+          <td>Le Directeur</td>
+        </tr>
+        <tr class="signature-lignes">
+          <td>________________</td>
+          <td>________________</td>
+          <td>
+            <img src="signature_directeur.png" alt="Signature" class="signature-img" />
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  }
+
+</div>

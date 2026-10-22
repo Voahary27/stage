@@ -4,9 +4,12 @@ import { AdminService, DemandeAdmin } from '../../services/admin.service';
 import { ModalDetailDemande } from './modal/modal-detail-demande/modal-detail-demande';
 import { ModalRefus } from './modal/modal-refus/modal-refus';
 import { ToastService } from '../../services/toast.service';
+import { Navbar } from '../../components/navbar/navbar';
+import { FichePdf } from '../../components/fiche-pdf/fiche-pdf';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  imports: [CommonModule, ModalDetailDemande, ModalRefus],
+  imports: [CommonModule, ModalDetailDemande, ModalRefus, Navbar,FichePdf],
   selector: 'app-admin-dashboard',
   styleUrl: './admin-dashboard.css',
   templateUrl: './admin-dashboard.html',
@@ -14,16 +17,21 @@ import { ToastService } from '../../services/toast.service';
 export class AdminDashboard implements OnInit {
   adminService = inject(AdminService);
   private toast = inject(ToastService);
+  private http   = inject(HttpClient);
+private apiUrl = 'http://localhost/api';
 
   profil    = this.adminService.profil;
   kpis      = this.adminService.kpis;
   isLoading = this.adminService.isLoading;
 
+
   demandesEnAttente = this.adminService.demandesEnAttente;
   demandesAcceptees = this.adminService.demandesAcceptees;
   demandesRefusees  = this.adminService.demandesRefusees;
 
+ demandePourPdf = signal<any | null>(null);
   ongletActif = signal(0);
+  isAnnulant = signal(false);
 
   demandeSelectionnee = signal<DemandeAdmin | null>(null);
   demandeARefuser     = signal<DemandeAdmin | null>(null);
@@ -105,6 +113,53 @@ export class AdminDashboard implements OnInit {
       }
     });
   }
+
+  imprimerFiche(d: any, event: Event) {
+  event.stopPropagation();
+
+  // Enrichir avec les infos du demandeur (déjà présentes via admin_demandes.php)
+  this.demandePourPdf.set(d);
+
+  const type = d.demande_type === 'conge' ? 'Conge' : 'Permission';
+  const ancienTitre = document.title;
+  document.title = `Fiche_${type}_${d.demande_id}`;
+
+  setTimeout(() => {
+    window.print();
+    document.title = ancienTitre;
+  }, 200);
+}
+
+annulerDemande(d: any, event: Event) {
+  event.stopPropagation();
+
+  if (this.isAnnulant()) return;
+
+  const label = `${d.demande_type} de ${d.utilisateur_nom} ${d.utilisateur_prenom}`;
+  const msg = `⚠️ Annuler cette demande ?\n\n${label}\n\nLe solde déduit sera RENDU au demandeur.\nCette action est irréversible.`;
+
+  if (!confirm(msg)) return;
+
+  this.isAnnulant.set(true);
+
+  this.http.post<any>(`${this.apiUrl}/demande_annuler.php`, {
+    demande_id: d.demande_id
+  }).subscribe({
+    next: (res) => {
+      this.isAnnulant.set(false);
+      if (res.success) {
+        this.toast.success(res.message || 'Demande annulée et solde rendu');
+        this.adminService.chargerTout();
+      } else {
+        this.toast.error(res.message || 'Erreur');
+      }
+    },
+    error: (err) => {
+      this.isAnnulant.set(false);
+      this.toast.error(err.error?.message || 'Erreur serveur');
+    }
+  });
+}
 
   // ─── Formatage ───────────────────────────────────────────
   formatDates(d: DemandeAdmin): string {

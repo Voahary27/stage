@@ -387,3 +387,63 @@
         gap: 12px;
     }
 }
+
+/* ═══════════════════════════════════════════
+   Actions (PDF, Annuler)
+   ═══════════════════════════════════════════ */
+.actions-cell {
+    display: flex;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.btn-icon:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-detail {
+    background: #f1f3f4;
+    color: #5f6368;
+}
+
+.btn-detail:hover:not(:disabled) {
+    background: #1a73e8;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-pdf {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.btn-pdf:hover:not(:disabled) {
+    background: #34a853;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-annuler {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.btn-annuler:hover:not(:disabled) {
+    background: #ea4335;
+    color: #fff;
+    transform: scale(1.05);
+}

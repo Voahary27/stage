@@ -174,6 +174,43 @@
 }
 
 /* ═══════════════════════════════════════════
+   Header de page (avec bouton retour)
+   ═══════════════════════════════════════════ */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.btn-retour {
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-retour:hover {
+    background: #f1f3f4;
+    color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+/* Ajustement du titre dans le header */
+.page-header .page-title {
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════
    Responsive
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
@@ -199,4 +236,208 @@
         padding: 10px 12px;
         font-size: 13px;
     }
+}
+
+/* ═══════════════════════════════════════════
+   Card header (titre + bouton)
+   ═══════════════════════════════════════════ */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.card-header h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.btn-add {
+    padding: 8px 16px;
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btn-add:hover {
+    background: #1765cc;
+}
+
+/* ═══════════════════════════════════════════
+   Actions du tableau
+   ═══════════════════════════════════════════ */
+.center {
+    text-align: center;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+    margin: 0 2px;
+}
+
+.btn-edit {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.btn-edit:hover {
+    background: #1a73e8;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.btn-delete:hover {
+    background: #ea4335;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* ═══════════════════════════════════════════
+   Bouton crayon (édition)
+   ═══════════════════════════════════════════ */
+.btn-edit-info {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e8f0fe;
+    color: #1a73e8;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.btn-edit-info:hover {
+    background: #1a73e8;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* ═══════════════════════════════════════════
+   Inputs en mode édition
+   ═══════════════════════════════════════════ */
+.valeur-input {
+    width: 100%;
+    max-width: 260px;
+    padding: 6px 10px;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #202124;
+    outline: none;
+    text-align: right;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.valeur-input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8 inset;
+}
+
+/* ═══════════════════════════════════════════
+   Boutons Annuler / Enregistrer
+   ═══════════════════════════════════════════ */
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f3f4;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btn-cancel {
+    background: #f1f3f4;
+    color: #202124;
+}
+
+.btn-cancel:hover {
+    background: #e8eaed;
+}
+
+.btn-save {
+    background: #1a73e8;
+    color: #fff;
+}
+
+.btn-save:hover {
+    background: #1765cc;
+}
+
+/* ═══════════════════════════════════════════
+   Badge rôle (avec couleurs par rôle)
+   ═══════════════════════════════════════════ */
+.badge-role {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.role-employe {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.role-chef {
+    background: #fef7e0;
+    color: #b06000;
+}
+
+.role-sg {
+    background: #f3e8fd;
+    color: #8430ce;
+}
+
+.role-admin {
+    background: #fce8e6;
+    color: #c5221f;
 }

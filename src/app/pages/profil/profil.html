@@ -2,121 +2,301 @@
 
 <main class="profil-container">
 
-  <h1 class="page-title">Mon profil</h1>
+   <div class="page-header">
+    @if (modeAdmin()) {
+      <button class="btn-retour" (click)="retourListe()">
+        ← Retour 
+      </button>
+    }
 
-  <!-- ═══════════════════════════════════════════
-       INFORMATIONS PERSONNELLES
-       ═══════════════════════════════════════════ -->
+    <h1 class="page-title">
+      @if (modeAdmin()) {
+        Profil de {{ profil()?.utilisateur_nom }} {{ profil()?.utilisateur_prenom }}
+      } @else {
+        Mon profil
+      }
+    </h1>
+  </div>
+
+ 
   <section class="card">
+  <div class="card-header">
     <h2>Informations personnelles</h2>
 
-    @if (profil(); as p) {
-      <div class="info-grid">
+     @if (!editMode() && (!modeAdmin() || profil()?.utilisateur_matricule === monMatricule())) {
+      <button class="btn-edit-info" (click)="ouvrirEdition()" title="Modifier mes informations">
+        ✏
+      </button>
+    }
+  </div>
 
-        <div class="info-row">
-          <span class="label">Matricule</span>
-          <span class="valeur">{{ p.utilisateur_matricule || '—' }}</span>
-        </div>
+  @if (profil(); as p) {
+    <div class="info-grid">
 
-        <div class="info-row">
-          <span class="label">Nom</span>
-          <span class="valeur">{{ p.utilisateur_nom || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Prénom</span>
-          <span class="valeur">{{ p.utilisateur_prenom || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Email</span>
-          <span class="valeur">{{ p.utilisateur_email || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Contact</span>
-          <span class="valeur">{{ p.utilisateur_contact || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Fonction</span>
-          <span class="valeur">{{ p.utilisateur_fonction || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Service</span>
-          <span class="valeur">{{ p.service_nom || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Direction</span>
-          <span class="valeur">{{ p.utilisateur_direction || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Corps</span>
-          <span class="valeur">{{ p.utilisateur_corps || '—' }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">Prise de service</span>
-          <span class="valeur">{{ formatDate(p.utilisateur_date_prise_service) }}</span>
-        </div>
-
+      <!-- MATRICULE (jamais éditable) -->
+      <div class="info-row">
+        <span class="label">Matricule</span>
+        <span class="valeur">{{ p.utilisateur_matricule }}</span>
       </div>
-    } @else {
-      <p class="empty">Chargement du profil...</p>
+
+      <!-- NOM -->
+      <div class="info-row">
+        <span class="label">Nom</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().nom"
+                 (input)="updateForm('nom', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_nom || '—' }}</span>
+        }
+      </div>
+
+      <!-- PRÉNOM -->
+      <div class="info-row">
+        <span class="label">Prénom</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().prenom"
+                 (input)="updateForm('prenom', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_prenom || '—' }}</span>
+        }
+      </div>
+
+      <!-- EMAIL -->
+      <div class="info-row">
+        <span class="label">Email</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="email"
+                 [value]="formEdit().email"
+                 (input)="updateForm('email', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_email || '—' }}</span>
+        }
+      </div>
+
+      <!-- CONTACT -->
+      <div class="info-row">
+        <span class="label">Contact</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().contact"
+                 (input)="updateForm('contact', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_contact || '—' }}</span>
+        }
+      </div>
+
+      <!-- FONCTION (lecture seule) -->
+      <div class="info-row">
+        <span class="label">Fonction</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().fonction"
+                 (input)="updateForm('fonction', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_fonction || '—' }}</span>
+        }
+      </div>
+
+      <!-- SERVICE -->
+       <div class="info-row">
+        <span class="label">Service</span>
+        @if (editMode()) {
+          <div class="service-edit-wrapper">
+            <select class="valeur-input"
+        [ngModel]="formEdit().service ?? ''"
+        (ngModelChange)="updateForm('service', $event ? +$event : null)">
+  <option value="">-- Aucun --</option>
+  @for (s of services(); track s.service_id) {
+    <option [value]="s.service_id">{{ s.service_nom }}</option>
+  }
+</select>
+            <small class="hint">
+              ⚠️ Changer de service modifie votre rattachement hiérarchique.
+            </small>
+          </div>
+        } @else {
+          <span class="valeur">{{ p.service_nom || '—' }}</span>
+        }
+      </div>
+
+      <!-- DIRECTION (lecture seule) -->
+      <div class="info-row">
+        <span class="label">Direction</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().direction"
+                 (input)="updateForm('direction', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_direction || '—' }}</span>
+        }
+      </div>
+
+      <!-- CORPS (lecture seule) -->
+       <div class="info-row">
+        <span class="label">Corps</span>
+        @if (editMode()) {
+          <input class="valeur-input" type="text"
+                 [value]="formEdit().corps"
+                 (input)="updateForm('corps', $any($event.target).value)" />
+        } @else {
+          <span class="valeur">{{ p.utilisateur_corps || '—' }}</span>
+        }
+      </div>
+
+
+      <!-- DATE PRISE SERVICE (lecture seule) -->
+      <div class="info-row">
+        <span class="label">Prise de service</span>
+        <span class="valeur">{{ formatDate(p.utilisateur_date_prise_service) }}</span>
+      </div>
+
+    </div>
+
+    <!-- Boutons Annuler / Enregistrer (mode édition) -->
+    @if (editMode()) {
+      <div class="edit-actions">
+        <button class="btn-cancel" (click)="annulerEdition()">Annuler</button>
+        <button class="btn-save"   (click)="enregistrerProfil()">Enregistrer</button>
+      </div>
+    }
+
+  } @else {
+    <p class="empty">Chargement du profil...</p>
+  }
+</section>
+
+@if (modeAdmin() && profil()?.utilisateur_matricule !== monMatricule()) {
+  <section class="card">
+    <h2>Administration</h2>
+
+    <div class="info-grid">
+
+      <!-- Rôle actuel  -->
+      <div class="info-row">
+        <span class="label">Rôle actuel</span>
+        <span class="valeur">
+          <span class="badge-role" [class]="'role-' + profil()?.utilisateur_role">
+            {{ profil()?.utilisateur_role || '—' }}
+          </span>
+        </span>
+      </div>
+
+      <!-- Nouveau rôle -->
+      <div class="info-row">
+        <span class="label">Nouveau rôle</span>
+        <select class="valeur-input"
+                [value]="nouveauRole()"
+                (change)="nouveauRole.set($any($event.target).value)">
+          <option value="">Selection
+          </option>
+          <option value="employe">Employé</option>
+          <option value="chef">Chef de service</option>
+          <option value="sg">Secrétaire Général</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Bouton de validation -->
+    @if (nouveauRole() && nouveauRole() !== profil()?.utilisateur_role) {
+      <div class="edit-actions">
+        <button class="btn-cancel" (click)="nouveauRole.set('')">
+          Annuler
+        </button>
+        <button class="btn-save" (click)="changerRole()">
+          Changer le rôle
+        </button>
+      </div>
     }
   </section>
+}
 
   <!-- ═══════════════════════════════════════════
        ÉTAT DU SOLDE
        ═══════════════════════════════════════════ -->
   <section class="card">
+    <div class="card-header">
     <h2>État du solde</h2>
 
-    @if (soldes().length > 0) {
-      <div class="table-container">
-        <table class="solde-table">
-          <thead>
-            <tr>
-              <th>Année</th>
-              <th class="right">Solde initial</th>
-              <th class="right">Déjà consommé</th>
-              <th class="right">Reliquat</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (s of soldes(); track s.solde_annuel_annee) {
-              <tr>
-                <td><strong>{{ s.solde_annuel_annee }}</strong></td>
-                <td class="right">30 j</td>
-                <td class="right">
-                  <span class="solde-consomme">{{ 30 - s.solde_annuel_valeur }} j</span>
-                </td>
-                <td class="right">
-                  <strong class="solde-actuel">{{ s.solde_annuel_valeur }} j</strong>
-                </td>
-              </tr>
-            }
-          </tbody>
-          <tfoot>
-            <tr>
-              <td><strong>TOTAL</strong></td>
-              <td class="right"><strong>{{ totalInitial() }} j</strong></td>
-              <td class="right">
-                <strong class="total-consomme">{{ totalInitial() - totalActuel() }} j</strong>
-              </td>
-              <td class="right">
-                <strong class="total">{{ totalActuel() }} j</strong>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    } @else {
-      <p class="empty">Aucun solde enregistré.</p>
+    @if (modeAdmin()) {
+      <button class="btn-add" (click)="ouvrirAjoutSolde()">
+        + Ajouter une année
+      </button>
     }
+  </div>
+
+  @if (soldes().length > 0) {
+    <div class="table-container">
+      <table class="solde-table">
+        <thead>
+          <tr>
+            <th>Année</th>
+            <th class="right">Solde initial</th>
+            <th class="right">Déjà consommé</th>
+            <th class="right">Reliquat</th>
+            @if (modeAdmin()) {
+              <th class="center">Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of soldes(); track s.solde_annuel_annee) {
+            <tr>
+              <td><strong>{{ s.solde_annuel_annee }}</strong></td>
+              <td class="right">30 j</td>
+              <td class="right">
+                <span class="solde-consomme">{{ 30 - s.solde_annuel_valeur }} j</span>
+              </td>
+              <td class="right">
+                <strong class="solde-actuel">{{ s.solde_annuel_valeur }} j</strong>
+              </td>
+              @if (modeAdmin()) {
+                <td class="center actions-cell">
+                  <button class="btn-icon btn-edit"
+                          (click)="ouvrirEditionSolde(s)"
+                          title="Modifier">✏</button>
+                  <button class="btn-icon btn-delete"
+                          (click)="supprimerSolde(s)"
+                          title="Supprimer">🗑</button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td><strong>TOTAL</strong></td>
+            <td class="right"><strong>{{ totalInitial() }} j</strong></td>
+            <td class="right">
+              <strong class="total-consomme">{{ totalInitial() - totalActuel() }} j</strong>
+            </td>
+            <td class="right">
+              <strong class="total">{{ totalActuel() }} j</strong>
+            </td>
+            @if (modeAdmin()) {
+              <td></td>
+            }
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  } @else {
+    <p class="empty">Aucun solde enregistré.</p>
+  }
   </section>
 
+  
 </main>
+
+@if (modeAdmin() && modalSoldeOuverte()) {
+  <app-modal-solde
+    [matricule]="matriculeAdmin()"
+    [mode]="modalSoldeMode()"
+    [anneeExistante]="soldeEnEdition()?.annee"
+    [valeurExistante]="soldeEnEdition()?.valeur"
+    (confirmer)="onSoldeModifie()"
+    (annuler)="fermerModalSolde()">
+  </app-modal-solde>
+}

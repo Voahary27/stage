@@ -1,0 +1,307 @@
+:host {
+    display: block;
+    font-family: 'Roboto', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f4f9;
+    min-height: 100vh;
+    padding-bottom: 40px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.gestion-container {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════
+   Header
+   ═══════════════════════════════════════════ */
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1a73e8;
+}
+
+.page-header .subtitle {
+    margin: 0;
+    font-size: 14px;
+    color: #5f6368;
+}
+
+/* ═══════════════════════════════════════════
+   Toolbar (recherche + onglets)
+   ═══════════════════════════════════════════ */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.search-bar {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-bar .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: #fff;
+}
+
+.search-bar input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8 inset;
+}
+
+/* Onglets */
+.tabs-nav {
+    display: flex;
+    gap: 8px;
+    background: #fff;
+    padding: 4px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.1);
+}
+
+.tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.tab:hover {
+    background: #f1f3f4;
+}
+
+.tab.active {
+    background: #1a73e8;
+    color: #fff;
+}
+
+.tab .badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.tab:not(.active) .badge {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+/* ═══════════════════════════════════════════
+   Slider
+   ═══════════════════════════════════════════ */
+.slider-viewport {
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.1);
+}
+
+.slider-track {
+    display: flex;
+    width: 200%;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 8px;
+    overflow-x: auto;
+}
+
+/* ═══════════════════════════════════════════
+   Tableau
+   ═══════════════════════════════════════════ */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.user-table thead th {
+    text-align: left;
+    padding: 14px 16px;
+    background: #f8f9fa;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+.user-table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f3f4;
+    color: #202124;
+    vertical-align: middle;
+}
+
+.user-table tbody tr {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.user-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.user-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.user-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-cell strong {
+    font-weight: 500;
+}
+
+.user-cell small {
+    font-size: 12px;
+    color: #5f6368;
+    text-transform: capitalize;
+}
+
+.badge-service {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e8f0fe;
+    color: #1a73e8;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════
+   Actions
+   ═══════════════════════════════════════════ */
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-delete,
+.btn-solde {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-delete {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.btn-delete:hover {
+    background: #ea4335;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-solde {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.btn-solde:hover {
+    background: #34a853;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* ═══════════════════════════════════════════
+   État vide / loading
+   ═══════════════════════════════════════════ */
+.loading,
+.empty {
+    text-align: center;
+    color: #5f6368;
+    padding: 60px 20px;
+    font-size: 14px;
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .gestion-container {
+        padding: 16px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar {
+        max-width: 100%;
+    }
+
+    .tabs-nav {
+        width: 100%;
+    }
+
+    .tab {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .actions-cell {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

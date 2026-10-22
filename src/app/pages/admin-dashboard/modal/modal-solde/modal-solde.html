@@ -1,0 +1,50 @@
+<div class="modal-backdrop" (click)="fermer()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ mode === 'add' ? 'Ajouter une année' : 'Modifier le solde' }}</h2>
+      <button type="button" class="btn-close" (click)="fermer()">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-row">
+        <label for="annee">Année</label>
+        <input
+          id="annee"
+          type="number"
+          min="2000"
+          max="2100"
+          [value]="annee()"
+          [disabled]="mode === 'edit'"
+          (input)="annee.set($any($event.target).valueAsNumber)" />
+      </div>
+
+      <div class="form-row">
+        <label for="valeur">Valeur (jours)</label>
+        <input
+          id="valeur"
+          type="number"
+          min="0"
+          max="60"
+          [value]="valeur()"
+          (input)="valeur.set($any($event.target).valueAsNumber)" />
+      </div>
+
+      @if (errorMsg()) {
+        <div class="field-error">{{ errorMsg() }}</div>
+      }
+
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="fermer()">
+        Annuler
+      </button>
+      <button type="button" class="btn-primary" [disabled]="isLoading()" (click)="valider()">
+        {{ isLoading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+    </div>
+
+  </div>
+</div>

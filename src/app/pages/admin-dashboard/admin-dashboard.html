@@ -1,11 +1,4 @@
-<header class="dashboard-header">
-  @if (profil(); as p) {
-    <h1>Bonjour {{ p.utilisateur_nom }} {{ p.utilisateur_prenom }}</h1>
-    <p class="subtitle">{{ p.utilisateur_fonction }}</p>
-  } @else {
-    <h1>Bonjour</h1>
-  }
-</header>
+<app-navbar></app-navbar>
 
 <section class="kpi-section">
   @if (kpis(); as k) {
@@ -126,41 +119,43 @@
                 <th>Dates prévues</th>
                 <th>Jours</th>
                 <th>Statut</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              @for (d of demandesAcceptees(); track d.demande_id) {
-                <tr>
-                  <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
-                  <td>
-                    <span class="badge-type" [class]="'type-' + d.demande_type">
-                      {{ d.demande_type }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="user-cell">
-                      <strong>{{ d.utilisateur_nom }} {{ d.utilisateur_prenom }}</strong>
-                      <small>{{ d.utilisateur_matricule }}</small>
-                    </div>
-                  </td>
-                  <td>{{ formatDates(d) }}</td>
-                  <td>
-                    @if (d.demande_type === 'conge') {
-                      <strong>{{ d.nb_jours }} j</strong>
-                    } @else {
-                      <span class="na">N/A</span>
-                    }
-                  </td>
-                  <td>
-                    <span class="badge-statut statut-acceptee">acceptée</span>
-                  </td>
-                  <td class="detail-cell">
-                    <button class="btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
-                  </td>
-                </tr>
-              }
-            </tbody>
+  @for (d of demandesAcceptees(); track d.demande_id) {
+    <tr>
+      <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+      <td>
+        <span class="badge-type" [class]="'type-' + d.demande_type">
+          {{ d.demande_type }}
+        </span>
+      </td>
+      <td>
+        <div class="user-cell">
+          <strong>{{ d.utilisateur_nom }} {{ d.utilisateur_prenom }}</strong>
+          <small>{{ d.utilisateur_matricule }}</small>
+        </div>
+      </td>
+      <td>{{ formatDates(d) }}</td>
+      <td>
+        @if (d.demande_type === 'conge') {
+          <strong>{{ d.nb_jours }} j</strong>
+        } @else {
+          <span class="na">N/A</span>
+        }
+      </td>
+      <td>
+        <span class="badge-statut statut-acceptee">acceptée</span>
+      </td>
+      <td class="actions-cell">
+        <button class="btn-icon btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+        <button class="btn-icon btn-pdf" (click)="imprimerFiche(d, $event)" title="Imprimer la fiche">📄</button>
+        <button class="btn-icon btn-annuler" (click)="annulerDemande(d, $event)" [disabled]="isAnnulant()" title="Annuler et rendre le solde">🗑</button>
+      </td>
+    </tr>
+  }
+</tbody>
           </table>
         } @else {
           <p class="empty">Aucune demande acceptée.</p>
@@ -240,4 +235,17 @@
   </app-modal-refus>
 }
     
-
+@if (demandePourPdf(); as d) {
+  <app-fiche-pdf
+    [demande]="d"
+    [profil]="{
+      utilisateur_nom: d.utilisateur_nom,
+      utilisateur_prenom: d.utilisateur_prenom,
+      utilisateur_matricule: d.utilisateur_matricule,
+      utilisateur_fonction: d.utilisateur_fonction,
+      utilisateur_corps: d.utilisateur_corps,
+      utilisateur_direction: d.utilisateur_direction,
+      service_nom: d.service_nom
+    }">
+  </app-fiche-pdf>
+}

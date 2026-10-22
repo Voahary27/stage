@@ -1,0 +1,145 @@
+<app-navbar></app-navbar>
+
+<main class="gestion-container">
+
+  <div class="page-header">
+    <h1>Gestion des utilisateurs</h1>
+    <p class="subtitle">
+      {{ actifs().length }} actif(s) — {{ nouveaux().length }} nouveau(x)
+    </p>
+  </div>
+
+  <!-- Barre de recherche + onglets -->
+  <div class="toolbar">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Rechercher par nom, matricule ou service..."
+        [value]="recherche()"
+        (input)="recherche.set($any($event.target).value)" />
+    </div>
+
+    <div class="tabs-nav">
+      <button class="tab"
+              [class.active]="ongletActif() === 0"
+              (click)="changerOnglet(0)">
+        Actifs
+        <span class="badge">{{ actifs().length }}</span>
+      </button>
+      <button class="tab"
+              [class.active]="ongletActif() === 1"
+              (click)="changerOnglet(1)">
+        Nouveaux
+        <span class="badge">{{ nouveaux().length }}</span>
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+
+    <div class="slider-viewport">
+      <div class="slider-track" [style.transform]="'translateX(-' + (ongletActif() * 50) + '%)'">
+
+        <!-- ═══════════════════════════════════════════
+             SLIDE 1 : ACTIFS
+             ═══════════════════════════════════════════ -->
+        <div class="slide">
+          @if (actifsFiltres().length > 0) {
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Nom Prénom</th>
+                  <th>Service</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (u of actifsFiltres(); track u.utilisateur_matricule) {
+                  <tr (dblclick)="ouvrirProfil(u)" title="Double-clic pour voir le profil">
+                    <td><strong>{{ u.utilisateur_matricule }}</strong></td>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ u.utilisateur_nom }} {{ u.utilisateur_prenom }}</strong>
+                        <small>{{ u.utilisateur_role }}</small>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge-service">{{ u.service_nom || '—' }}</span>
+                    </td>
+                    <td class="actions-cell">
+                      <button class="btn-delete"
+                              (click)="supprimer(u, $event)"
+                              title="Supprimer">
+                        🗑
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="empty">
+              {{ recherche() ? 'Aucun résultat pour cette recherche.' : 'Aucun utilisateur actif.' }}
+            </p>
+          }
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SLIDE 2 : NOUVEAUX
+             ═══════════════════════════════════════════ -->
+        <div class="slide">
+          @if (nouveauxFiltres().length > 0) {
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Nom Prénom</th>
+                  <th>Service</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (u of nouveauxFiltres(); track u.utilisateur_matricule) {
+                  <tr (dblclick)="ouvrirProfil(u)" title="Double-clic pour voir le profil">
+                    <td><strong>{{ u.utilisateur_matricule }}</strong></td>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ u.utilisateur_nom }} {{ u.utilisateur_prenom }}</strong>
+                        <small>{{ u.utilisateur_role }}</small>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge-service">{{ u.service_nom || '—' }}</span>
+                    </td>
+                    <td class="actions-cell">
+                      <button class="btn-solde"
+                              (click)="definirSolde(u); $event.stopPropagation()"
+                              title="Définir le solde">
+                        💰 Définir solde
+                      </button>
+                      <button class="btn-delete"
+                              (click)="supprimer(u, $event)"
+                              title="Supprimer">
+                        🗑
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="empty">
+              {{ recherche() ? 'Aucun résultat pour cette recherche.' : 'Aucun nouvel utilisateur.' }}
+            </p>
+          }
+        </div>
+
+      </div>
+    </div>
+  }
+
+</main>

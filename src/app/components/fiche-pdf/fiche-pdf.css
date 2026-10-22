@@ -1,0 +1,140 @@
+/* ═══════════════════════════════════════════
+   ÉCRAN : composant CACHÉ
+   ═══════════════════════════════════════════ */
+.fiche-container {
+    display: none;
+    /* ← Caché à l'écran */
+}
+
+/* ═══════════════════════════════════════════
+   IMPRESSION : composant VISIBLE
+   ═══════════════════════════════════════════ */
+@media print {
+
+    .fiche-container {
+        display: block !important;
+    }
+
+    /* Cacher tout le reste de la page */
+    body>*:not(.fiche-container) {
+        display: none !important;
+    }
+
+    /* La fiche prend toute la page */
+    .fiche-container {
+        position: fixed;
+        inset: 0;
+        background: white;
+        padding: 20mm 15mm;
+        font-family: 'Times New Roman', serif;
+        font-size: 12pt;
+        color: #000;
+        z-index: 9999;
+    }
+
+    /* ═══ En-tête ═══ */
+    .entete {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .entete-top {
+        font-size: 11pt;
+    }
+
+    .entete-sep {
+        letter-spacing: -2px;
+        color: #666;
+        font-size: 10pt;
+        margin: 4px 0;
+    }
+
+    .entete-ministere {
+        font-size: 10pt;
+        line-height: 1.3;
+    }
+
+    /* ═══ Titre ═══ */
+    .titre-fiche {
+        text-align: center;
+        font-size: 16pt;
+        font-weight: bold;
+        margin: 20px 0 10px;
+        letter-spacing: 1px;
+        text-decoration: underline;
+    }
+
+    .numero {
+        text-align: right;
+        font-size: 11pt;
+        margin-bottom: 4px;
+    }
+
+    .date-emission {
+        text-align: right;
+        font-size: 11pt;
+        margin-bottom: 20px;
+    }
+
+    /* ═══ Tables ═══ */
+    .infos-table,
+    .congé-table,
+    .permission-table {
+        width: 100%;
+        margin-bottom: 15px;
+        border-collapse: collapse;
+    }
+
+    .infos-table .label,
+    .congé-table .label,
+    .permission-table .label {
+        width: 45%;
+        padding: 4px 8px;
+        font-weight: bold;
+        vertical-align: top;
+    }
+
+    .infos-table .valeur,
+    .congé-table .valeur,
+    .permission-table .valeur {
+        padding: 4px 8px;
+        vertical-align: top;
+    }
+
+    /* ═══ Signatures ═══ */
+    .signatures {
+        width: 100%;
+        margin-top: 40px;
+        border-collapse: collapse;
+    }
+
+    .signatures td {
+        text-align: center;
+        padding: 8px;
+        font-weight: bold;
+        font-size: 11pt;
+    }
+
+    .signature-lignes td {
+        padding-top: 40px;
+        font-weight: normal;
+        font-size: 10pt;
+    }
+
+    .signature-img {
+        max-width: 80px;
+        max-height: 40px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* ═══ Lieu et date ═══ */
+    .lieu-date {
+        text-align: right;
+        font-style: italic;
+        margin: 30px 0;
+        font-size: 11pt;
+    }
+
+    
+}

@@ -77,18 +77,38 @@
   <div class="slider-viewport">
     <div class="slider-track" [style.transform]="'translateX(-' + (ongletActif() * 25) + '%)'">
 
+      <!-- ═══ Slide 1 : En attente ═══ -->
       <div class="slide">
         @if (demandesEnAttente().length > 0) {
           <table class="demande-table">
             <thead>
-              <tr><th>Type</th><th>Dates prévues</th><th>Statut</th></tr>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Dates prévues</th>
+                <th>Jours</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               @for (d of demandesEnAttente(); track d.demande_id) {
                 <tr>
-                  <td>{{ d.demande_type }}</td>
+                  <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                  <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
                   <td>{{ formatDates(d) }}</td>
+                  <td>
+                    @if (d.demande_type === 'conge') {
+                      <strong>{{ nbJours(d) }} j</strong>
+                    } @else {
+                      <span class="na">N/A</span>
+                    }
+                  </td>
                   <td><span class="badge-statut" [class]="'statut-' + d.demande_status">{{ d.demande_status }}</span></td>
+                  <td class="actions-cell">
+                    <button class="btn-icon btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    <button class="btn-icon btn-delete" (click)="supprimerDemande(d, $event)" title="Supprimer">🗑</button>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -98,18 +118,38 @@
         }
       </div>
 
+      <!-- ═══ Slide 2 : Acceptées ═══ -->
       <div class="slide">
         @if (demandesAcceptees().length > 0) {
           <table class="demande-table">
             <thead>
-              <tr><th>Type</th><th>Dates prévues</th><th>Statut</th></tr>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Dates prévues</th>
+                <th>Jours</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               @for (d of demandesAcceptees(); track d.demande_id) {
                 <tr>
-                  <td>{{ d.demande_type }}</td>
+                  <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                  <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
                   <td>{{ formatDates(d) }}</td>
+                  <td>
+                    @if (d.demande_type === 'conge') {
+                      <strong>{{ nbJours(d) }} j</strong>
+                    } @else {
+                      <span class="na">N/A</span>
+                    }
+                  </td>
                   <td><span class="badge-statut" [class]="'statut-' + d.demande_status">{{ d.demande_status }}</span></td>
+                  <td class="actions-cell">
+                    <button class="btn-icon btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    <button class="btn-icon btn-pdf" (click)="imprimerFiche(d, $event)" title="Imprimer la fiche">📄</button>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -119,18 +159,37 @@
         }
       </div>
 
+      <!-- ═══ Slide 3 : Refusées ═══ -->
       <div class="slide">
         @if (demandesRefusees().length > 0) {
           <table class="demande-table">
             <thead>
-              <tr><th>Type</th><th>Dates prévues</th><th>Statut</th></tr>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Dates prévues</th>
+                <th>Jours</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               @for (d of demandesRefusees(); track d.demande_id) {
                 <tr>
-                  <td>{{ d.demande_type }}</td>
+                  <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                  <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
                   <td>{{ formatDates(d) }}</td>
+                  <td>
+                    @if (d.demande_type === 'conge') {
+                      {{ nbJours(d) }} j
+                    } @else {
+                      <span class="na">N/A</span>
+                    }
+                  </td>
                   <td><span class="badge-statut" [class]="'statut-' + d.demande_status">{{ d.demande_status }}</span></td>
+                  <td class="actions-cell">
+                    <button class="btn-icon btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -140,18 +199,43 @@
         }
       </div>
 
+      <!-- ═══ Slide 4 : Toutes ═══ -->
       <div class="slide">
         @if (demandesToutes().length > 0) {
           <table class="demande-table">
             <thead>
-              <tr><th>Type</th><th>Dates prévues</th><th>Statut</th></tr>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Dates prévues</th>
+                <th>Jours</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               @for (d of demandesToutes(); track d.demande_id) {
                 <tr>
-                  <td>{{ d.demande_type }}</td>
+                  <td class="date-creation">{{ formatDateCreation(d.demande_date_creation) }}</td>
+                  <td><span class="badge-type" [class]="'type-' + d.demande_type">{{ d.demande_type }}</span></td>
                   <td>{{ formatDates(d) }}</td>
+                  <td>
+                    @if (d.demande_type === 'conge') {
+                      {{ nbJours(d) }} j
+                    } @else {
+                      <span class="na">N/A</span>
+                    }
+                  </td>
                   <td><span class="badge-statut" [class]="'statut-' + d.demande_status">{{ d.demande_status }}</span></td>
+                  <td class="actions-cell">
+                    <button class="btn-icon btn-detail" (click)="ouvrirDetail(d)" title="Détails">⋯</button>
+                    @if (d.demande_status === 'en_attente') {
+                      <button class="btn-icon btn-delete" (click)="supprimerDemande(d, $event)" title="Supprimer">🗑</button>
+                    }
+                    @if (d.demande_status === 'acceptee') {
+                      <button class="btn-icon btn-pdf" (click)="imprimerFiche(d, $event)" title="Imprimer">📄</button>
+                    }
+                  </td>
                 </tr>
               }
             </tbody>
@@ -165,6 +249,14 @@
   </div>
 </section>
 
+
+@if (demandeSelectionnee(); as d) {
+  <app-modal-detail-demande
+    [demande]="d"
+    (fermer)="fermerDetail()">
+  </app-modal-detail-demande>
+}
+
 @if (modalPermissionOuverte()) {
   <app-modal-permission
     (fermer)="fermerModalPermission()"
@@ -177,4 +269,11 @@
     (fermer)="fermerModalConge()"
     (ajout)="onCongeCree()">
   </app-modal-conge>
+}
+
+@if (demandePourPdf(); as d) {
+  <app-fiche-pdf
+    [demande]="d"
+    [profil]="profil()">
+  </app-fiche-pdf>
 }
